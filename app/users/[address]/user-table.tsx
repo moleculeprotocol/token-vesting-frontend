@@ -163,7 +163,7 @@ export function UserTable({ schedules }: { schedules: ProcessedSchedule[] }) {
               <TableCell className="float-right">
                 <div className="flex gap-1">
                   <Link
-                    href={`/schedules/${schedule.id}`}
+                    href={`/users/${schedule.beneficiary}`}
                     className={buttonVariants({
                       size: "sm",
                       variant: "outline",
