@@ -158,7 +158,7 @@ export const columns: ColumnDef<ProcessedSchedule>[] = [
 
       return (
         <Link
-          href={`/schedules/${schedule.id}`}
+          href={`/users/${schedule.beneficiary}`}
           className={buttonVariants({ size: "sm" })}
         >
           Details
