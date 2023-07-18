@@ -20,7 +20,7 @@ const client = createPublicClient({
   ),
 })
 
-export const revalidate = 60 * 60 * 8 // revalidate every 8 hours
+export const revalidate = 60 * 60 * 1 // revalidate every hour
 
 export default async function Page() {
   let schedules: ProcessedSchedule[] = []
