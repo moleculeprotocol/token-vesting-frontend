@@ -1,5 +1,6 @@
 import { createPublicClient, getContract, http } from "viem"
 import { normalize } from "viem/ens"
+import { Chain } from "wagmi"
 
 import { DataTable } from "@/components/ui/data-table"
 import { env } from "@/env.mjs"
@@ -9,14 +10,12 @@ import { ProcessedSchedule, Schedule } from "@/types/schedule"
 
 import { columns } from "./columns"
 
+const chain: Chain = getChain(Number(env.NEXT_PUBLIC_CHAIN_ID))
+
 const client = createPublicClient({
-  chain: getChain(Number(env.NEXT_PUBLIC_CHAIN_ID)),
+  chain: chain,
   transport: http(
-    `https://eth-${
-      getChain(Number(env.NEXT_PUBLIC_CHAIN_ID)).network == "homestead"
-        ? "mainnet"
-        : getChain(Number(env.NEXT_PUBLIC_CHAIN_ID)).network
-    }.g.alchemy.com/v2/${env.NEXT_PUBLIC_ALCHEMY_KEY}`
+    `${chain.rpcUrls.alchemy.http[0]}/${env.NEXT_PUBLIC_ALCHEMY_KEY}`
   ),
 })
 
@@ -42,9 +41,15 @@ export default async function Page() {
       [scheduleIds[i]]
     )
 
-    const ensName = await client.getEnsName({
-      address: schedule.beneficiary as `0x${string}`,
-    })
+    let ensName = null
+
+    try {
+      ensName = await client.getEnsName({
+        address: schedule.beneficiary as `0x${string}`,
+      })
+    } catch (e) {
+      console.log("error getting ens name", e)
+    }
 
     let avatar = null
     if (ensName) {

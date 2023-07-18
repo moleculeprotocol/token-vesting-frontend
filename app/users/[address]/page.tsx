@@ -31,9 +31,15 @@ export default async function Page({
   params: { address: string }
 }) {
   let schedules: ProcessedSchedule[] = []
-  const ensName = await client.getEnsName({
-    address: params.address as `0x${string}`,
-  })
+
+  let ensName = null
+  try {
+    ensName = await client.getEnsName({
+      address: params.address as `0x${string}`,
+    })
+  } catch (e) {
+    console.log("error getting ens name", e)
+  }
 
   const vestingContract = getContract({
     address: env.NEXT_PUBLIC_VESTING_CONTRACT as `0x${string}`,
