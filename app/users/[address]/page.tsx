@@ -1,5 +1,6 @@
 import { Metadata } from "next"
 import { createPublicClient, getContract, http } from "viem"
+import { Chain } from "wagmi"
 
 import { env } from "@/env.mjs"
 import { getChain, truncateAddress } from "@/lib/utils"
@@ -8,14 +9,12 @@ import { ProcessedSchedule, Schedule } from "@/types/schedule"
 
 import { UserTable } from "./user-table"
 
+const chain: Chain = getChain(Number(env.NEXT_PUBLIC_CHAIN_ID))
+
 const client = createPublicClient({
-  chain: getChain(Number(env.NEXT_PUBLIC_CHAIN_ID)),
+  chain: chain,
   transport: http(
-    `https://eth-${
-      getChain(Number(env.NEXT_PUBLIC_CHAIN_ID)).network == "homestead"
-        ? "mainnet"
-        : getChain(Number(env.NEXT_PUBLIC_CHAIN_ID)).network
-    }.g.alchemy.com/v2/${env.NEXT_PUBLIC_ALCHEMY_KEY}`
+    `${chain.rpcUrls.alchemy.http[0]}/${env.NEXT_PUBLIC_ALCHEMY_KEY}`
   ),
 })
 
