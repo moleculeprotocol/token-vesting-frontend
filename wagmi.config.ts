@@ -1,13 +1,17 @@
-import { defineConfig /* loadEnv */ } from "@wagmi/cli"
+import { defineConfig, loadEnv } from "@wagmi/cli"
 import { actions, react } from "@wagmi/cli/plugins"
 
 import { abi } from "@/lib/vestingAbi"
 
 export default defineConfig(() => {
-  // const env = loadEnv({
-  //   mode: process.env.NODE_ENV,
-  //   envDir: process.cwd(),
-  // })
+  const env = loadEnv({
+    mode: process.env.NODE_ENV,
+    envDir: process.cwd(),
+  })
+
+  console.log("chain id", env.NEXT_PUBLIC_CHAIN_ID)
+  console.log("contract address", env.NEXT_PUBLIC_VESTING_CONTRACT)
+
   return {
     out: "wagmi/generated.ts",
     contracts: [
