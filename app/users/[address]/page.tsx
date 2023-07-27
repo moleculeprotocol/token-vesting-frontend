@@ -32,12 +32,11 @@ export default async function Page({
   let schedules: ProcessedSchedule[] = []
 
   let ensName = null
-  try {
+  // Only get ENS name for mainnet
+  if (chain.id == 1) {
     ensName = await client.getEnsName({
       address: params.address as `0x${string}`,
     })
-  } catch (e) {
-    console.log("error getting ens name", e)
   }
 
   const vestingContract = getContract({
