@@ -1,3 +1,4 @@
+import { SortingState } from "@tanstack/react-table"
 import { createPublicClient, getContract, http } from "viem"
 import { normalize } from "viem/ens"
 import { Chain } from "wagmi"
@@ -67,12 +68,18 @@ export default async function Page() {
     })
   }
 
+  const sortingState: SortingState = [{ id: "Total Token Amount", desc: true }]
+
   return (
     <>
       <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
         All Schedules
       </h1>
-      <DataTable columns={columns} data={schedules} />
+      <DataTable
+        columns={columns}
+        data={schedules}
+        sortingState={sortingState}
+      />
     </>
   )
 }

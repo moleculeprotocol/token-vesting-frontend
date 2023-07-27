@@ -25,13 +25,15 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  sortingState?: SortingState
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  sortingState = [],
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = React.useState<SortingState>(sortingState)
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )

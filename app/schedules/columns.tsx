@@ -26,7 +26,9 @@ export const columns: ColumnDef<ProcessedSchedule>[] = [
       if (originalRow.ensName) return originalRow.ensName
       return originalRow.beneficiary
     },
-    header: "Beneficiary",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Beneficiary" />
+    ),
     cell: ({ row }) => {
       const schedule = row.original
 
