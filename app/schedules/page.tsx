@@ -37,26 +37,28 @@ export default async function Page() {
       scheduleIds[i] as `0x${string}`,
     ])
 
-    const releasableAmount = await vestingContract.read.computeReleasableAmount(
-      [scheduleIds[i]]
-    )
+    let releasableAmount = BigInt(0)
+    if (schedule.status == 0) {
+      releasableAmount = await vestingContract.read.computeReleasableAmount([
+        scheduleIds[i],
+      ])
+    }
 
     let ensName = null
+    let avatar = null
 
-    try {
+    // Only get ENS name for mainnet
+    if (chain.id == 1) {
       ensName = await client.getEnsName({
         address: schedule.beneficiary as `0x${string}`,
       })
-    } catch (e) {
-      console.log("error getting ens name", e)
-    }
 
-    let avatar = null
-    if (ensName) {
-      const ensText = await client.getEnsAvatar({
-        name: normalize(ensName),
-      })
-      avatar = ensText as string
+      if (ensName) {
+        const ensText = await client.getEnsAvatar({
+          name: normalize(ensName),
+        })
+        avatar = ensText as string
+      }
     }
 
     schedules.push({
