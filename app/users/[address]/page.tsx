@@ -62,9 +62,12 @@ export default async function Page({
         BigInt(i),
       ])
 
-    const releasableAmount = await vestingContract.read.computeReleasableAmount(
-      [scheduleId]
-    )
+    let releasableAmount = BigInt(0)
+    if (schedule.status == 0) {
+      releasableAmount = await vestingContract.read.computeReleasableAmount([
+        scheduleId,
+      ])
+    }
 
     schedules.push({
       ...schedule,

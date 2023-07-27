@@ -9,6 +9,7 @@ import toast from "react-hot-toast"
 import { formatEther } from "viem"
 import { useAccount } from "wagmi"
 
+import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
   Card,
@@ -135,9 +136,19 @@ export function UserTable({ schedules }: { schedules: ProcessedSchedule[] }) {
           {schedules.map((schedule, index) => (
             <TableRow key={index}>
               <TableCell>
-                {new Intl.NumberFormat(undefined, {
-                  maximumFractionDigits: 2,
-                }).format(Number(formatEther(schedule.amountTotal as bigint)))}
+                <span>
+                  {new Intl.NumberFormat(undefined, {
+                    maximumFractionDigits: 2,
+                  }).format(
+                    Number(formatEther(schedule.amountTotal as bigint))
+                  )}
+                </span>
+
+                {schedule.status == 1 && (
+                  <Badge className="ml-2" variant="destructive">
+                    Revoked
+                  </Badge>
+                )}
               </TableCell>
               <TableCell>
                 <StartTableCell schedule={schedule} />
