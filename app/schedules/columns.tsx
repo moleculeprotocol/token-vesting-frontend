@@ -103,7 +103,14 @@ export const columns: ColumnDef<ProcessedSchedule>[] = [
 
       return (
         <HoverCard openDelay={250}>
-          <HoverCardTrigger>{totalFormatted}</HoverCardTrigger>
+          <HoverCardTrigger>
+            <span>{totalFormatted}</span>
+            {schedule.status == 1 && (
+              <Badge className="ml-2" variant="destructive">
+                Revoked
+              </Badge>
+            )}
+          </HoverCardTrigger>
           <HoverCardContent className="w-[450px]" align="start">
             <div className="flex flex-col gap-1">
               <p className="text-sm font-semibold">
