@@ -1,9 +1,8 @@
 import "@/styles/globals.css"
 
-import { Metadata } from "next"
+import type { Metadata } from "next"
 import { Toaster } from "react-hot-toast"
 
-import { siteConfig } from "@/config/site"
 import { fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
 
@@ -11,10 +10,10 @@ import ClientLayout from "./client"
 
 export const metadata: Metadata = {
   title: {
-    default: siteConfig.name,
-    template: `%s | ${siteConfig.name}`,
+    default: "Token Vesting Frontend",
+    template: `%s | Token Vesting Frontend`,
   },
-  description: siteConfig.description,
+  description: "Manage token vesting schedules and claim tokens.",
 }
 
 interface RootLayoutProps {

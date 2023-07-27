@@ -1,4 +1,5 @@
 import { SortingState } from "@tanstack/react-table"
+import type { Metadata } from "next"
 import { createPublicClient, getContract, http } from "viem"
 import { normalize } from "viem/ens"
 import { Chain } from "wagmi"
@@ -19,6 +20,10 @@ const client = createPublicClient({
     `${chain.rpcUrls.alchemy.http[0]}/${env.NEXT_PUBLIC_ALCHEMY_KEY}`
   ),
 })
+
+export const metadata: Metadata = {
+  title: "All Schedules",
+}
 
 export const revalidate = 60 * 60 * 1 // revalidate every hour
 

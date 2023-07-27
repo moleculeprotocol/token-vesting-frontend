@@ -1,4 +1,4 @@
-import { Metadata } from "next"
+import type { Metadata } from "next"
 import { createPublicClient, getContract, http } from "viem"
 import { Chain } from "wagmi"
 
@@ -19,7 +19,7 @@ const client = createPublicClient({
 })
 
 export const metadata: Metadata = {
-  title: `User`,
+  title: `User Schedules`,
 }
 
 export const revalidate = 60 * 10 // revalidate every 10 minutes
