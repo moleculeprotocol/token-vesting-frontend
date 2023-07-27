@@ -52,11 +52,11 @@ export function UserTable({ schedules }: { schedules: ProcessedSchedule[] }) {
         hash,
       })
       setIsReleasingSingle(false)
-      toast.success("Successfully claimed tokens")
+      toast.success("Successfully released tokens")
       await fetch(`/api/revalidate/${address}`)
     } catch (err) {
       setIsReleasingSingle(false)
-      toast.error("Failed to claim tokens")
+      toast.error("Failed to release tokens")
     }
   }
 
@@ -72,11 +72,11 @@ export function UserTable({ schedules }: { schedules: ProcessedSchedule[] }) {
         hash,
       })
       setIsReleasingAll(false)
-      toast.success("Successfully claimed tokens")
+      toast.success("Successfully released tokens")
       await fetch(`/api/revalidate/${address}`)
     } catch (err) {
       setIsReleasingAll(false)
-      toast.error("Failed to claim tokens")
+      toast.error("Failed to release tokens")
     }
   }
 
@@ -87,7 +87,7 @@ export function UserTable({ schedules }: { schedules: ProcessedSchedule[] }) {
           <CardHeader>
             <CardTitle>Is this you?</CardTitle>
             <CardDescription>
-              Connect your wallet to claim tokens from the vesting contract.
+              Connect your wallet to release tokens from the vesting contract.
             </CardDescription>
           </CardHeader>
           <CardFooter>
@@ -103,9 +103,9 @@ export function UserTable({ schedules }: { schedules: ProcessedSchedule[] }) {
       {isConnected && address == schedules[0].beneficiary && (
         <Card>
           <CardHeader>
-            <CardTitle>Claim all schedules</CardTitle>
+            <CardTitle>Release all tokens</CardTitle>
             <CardDescription>
-              Claim available tokens from all your vesting schedules in one
+              Release available tokens from all your vesting schedules in one
               single transaction.
             </CardDescription>
           </CardHeader>
@@ -114,7 +114,7 @@ export function UserTable({ schedules }: { schedules: ProcessedSchedule[] }) {
               {isReleasingAll && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Claim All
+              Release All
             </Button>
           </CardFooter>
         </Card>
@@ -192,7 +192,7 @@ export function UserTable({ schedules }: { schedules: ProcessedSchedule[] }) {
                         {isReleasingSingle && (
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         )}
-                        Claim
+                        Release
                       </Button>
                     )}
                 </div>

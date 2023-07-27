@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     default: "Token Vesting Frontend",
     template: `%s | Token Vesting Frontend`,
   },
-  description: "Manage token vesting schedules and claim tokens.",
+  description: "Manage token vesting schedules and release tokens.",
 }
 
 interface RootLayoutProps {

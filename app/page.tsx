@@ -39,10 +39,10 @@ export default function IndexPage() {
               {hasSchedule && (
                 <div className="space-y-2">
                   <h2 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
-                    Claim your tokens
+                    Release your tokens
                   </h2>
                   <p className="max-w-[600px]">
-                    Click below to see your own vesting schedule(s) and claim
+                    Click below to see your own vesting schedule(s) and release
                     tokens.
                   </p>
                   <Link href={`/users/${address}`} className={buttonVariants()}>
@@ -75,8 +75,8 @@ export default function IndexPage() {
             Your wallet is not connected
           </h1>
           <p className="max-w-[600px]">
-            Connect your wallet if you want to manage vesting schedules or claim
-            tokens from your vesting schedule(s).
+            Connect your wallet if you want to manage vesting schedules or
+            release tokens from your vesting schedule(s).
           </p>
           <div className="flex gap-2">
             <ConnectKitButton.Custom>
