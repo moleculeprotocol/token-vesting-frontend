@@ -1,7 +1,7 @@
 # Token Vesting Frontend
 ## Project setup
 
-- Nextjs
+- Next.js
 - Wagmi
 - Viem
 - ConnectKit
