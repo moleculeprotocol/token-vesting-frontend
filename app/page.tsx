@@ -30,9 +30,17 @@ export default function IndexPage() {
                   <p className="max-w-[600px]">
                     Click below to manage vesting schedules for this contract.
                   </p>
-                  <Link href="/schedules" className={buttonVariants()}>
-                    See All Schedules
-                  </Link>
+                  <div className="flex gap-2">
+                    <Link
+                      href="/schedules"
+                      className={buttonVariants({ variant: "outline" })}
+                    >
+                      See All Schedules
+                    </Link>
+                    <Link href="/schedules/new" className={buttonVariants()}>
+                      Create Schedule
+                    </Link>
+                  </div>
                 </div>
               )}
 
