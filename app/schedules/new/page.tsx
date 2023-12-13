@@ -30,27 +30,32 @@ import {
 import { Switch } from "@/components/ui/switch"
 import { cn } from "@/lib/utils"
 
-const formSchema = z.object({
-  beneficiary: z
-    .string()
-    .min(42, {
-      message: "Ethereum address is too short",
-    })
-    .startsWith("0x", {
-      message: "Ethereum address must start with 0x",
+const formSchema = z
+  .object({
+    beneficiary: z
+      .string()
+      .min(42, {
+        message: "Ethereum address is too short",
+      })
+      .startsWith("0x", {
+        message: "Ethereum address must start with 0x",
+      }),
+    amount: z.coerce.number().positive().min(0, {
+      message: "Amount must be greater than 0",
     }),
-  amount: z.coerce.number().positive().min(0, {
-    message: "Amount must be greater than 0",
-  }),
-  start: z.date({
-    required_error: "A start date is required",
-  }),
-  end: z.date({
-    required_error: "An end date is required",
-  }),
-  cliffMonths: z.coerce.number().int(),
-  revokable: z.boolean(),
-})
+    start: z.date({
+      required_error: "A start date is required",
+    }),
+    end: z.date({
+      required_error: "An end date is required",
+    }),
+    cliffMonths: z.coerce.number().int(),
+    revokable: z.boolean(),
+  })
+  .refine((data) => data.end > data.start, {
+    message: "End date cannot be earlier or the same as the start date.",
+    path: ["end"],
+  })
 
 export default function Page() {
   const [cliffSeconds, setCliffSeconds] = useState<number>()
