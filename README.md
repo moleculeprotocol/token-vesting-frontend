@@ -5,4 +5,5 @@
 - Wagmi
 - Viem
 - ConnectKit
+- Tailwind & ShadCn
 
