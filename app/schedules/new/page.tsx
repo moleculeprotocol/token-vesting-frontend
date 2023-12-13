@@ -103,6 +103,15 @@ export default function Page() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsCreating(true)
+
+    if (cliffSeconds > endTimestamp - startTimestamp) {
+      toast.error(
+        "Cliff duration is longer than the total vesting period. Please adjust the cliff or end date and try again."
+      )
+      setIsCreating(false)
+      return
+    }
+
     const availableTokens = await vestingContract.read.getWithdrawableAmount()
     if (formattedAmount > availableTokens) {
       toast.error(
