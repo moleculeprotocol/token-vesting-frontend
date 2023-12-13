@@ -1,13 +1,15 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import { waitForTransaction } from "@wagmi/core"
 import { ConnectKitButton } from "connectkit"
 import { format, getUnixTime } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
+import { Calendar as CalendarIcon, Loader2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
-import { parseUnits } from "viem"
-import { useAccount } from "wagmi"
+import toast from "react-hot-toast"
+import { createPublicClient, getContract, http, parseUnits } from "viem"
+import { Chain, useAccount } from "wagmi"
 import * as z from "zod"
 
 import { Button } from "@/components/ui/button"
@@ -28,7 +30,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Switch } from "@/components/ui/switch"
-import { cn } from "@/lib/utils"
+import { env } from "@/env.mjs"
+import { cn, getChain } from "@/lib/utils"
+import { abi } from "@/lib/vestingAbi"
+import { writeTokenVesting } from "@/wagmi/generated"
 
 const formSchema = z
   .object({
@@ -57,10 +62,26 @@ const formSchema = z
     path: ["end"],
   })
 
+const chain: Chain = getChain(Number(env.NEXT_PUBLIC_CHAIN_ID))
+
+const client = createPublicClient({
+  chain: chain,
+  transport: http(
+    `${chain.rpcUrls.alchemy.http[0]}/${env.NEXT_PUBLIC_ALCHEMY_KEY}`
+  ),
+})
+
+const vestingContract = getContract({
+  address: env.NEXT_PUBLIC_VESTING_CONTRACT as `0x${string}`,
+  abi: abi,
+  publicClient: client,
+})
+
 export default function Page() {
-  const [cliffSeconds, setCliffSeconds] = useState<number>()
-  const [startTimestamp, setStartTimestamp] = useState<number>()
-  const [endTimestamp, setEndTimestamp] = useState<number>()
+  const [isCreating, setIsCreating] = useState(false)
+  const [cliffSeconds, setCliffSeconds] = useState<number>(0)
+  const [startTimestamp, setStartTimestamp] = useState<number>(0)
+  const [endTimestamp, setEndTimestamp] = useState<number>(0)
   const [formattedAmount, setFormattedAmount] = useState<bigint>(0n)
   const { isConnected, address } = useAccount()
 
@@ -74,10 +95,40 @@ export default function Page() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsCreating(true)
+    const availableTokens = await vestingContract.read.getWithdrawableAmount()
+    if (formattedAmount > availableTokens) {
+      toast.error(
+        "Not enough tokens available to create this schedule. Send more tokens to the contract and try again."
+      )
+      setIsCreating(false)
+      return
+    }
+
+    try {
+      const { hash } = await writeTokenVesting({
+        functionName: "createVestingSchedule",
+        args: [
+          values.beneficiary as `0x${string}`,
+          BigInt(startTimestamp as number),
+          BigInt(cliffSeconds as number),
+          BigInt((endTimestamp - startTimestamp) as number),
+          BigInt(1),
+          values.revokable as boolean,
+          formattedAmount,
+        ],
+        mode: "prepared",
+      })
+      await waitForTransaction({
+        hash,
+      })
+      setIsCreating(false)
+      toast.success("Successfully created schedule")
+    } catch (e) {
+      setIsCreating(false)
+      toast.error("Failed to create schedule")
+    }
   }
 
   const amount = form.watch("amount")
@@ -274,7 +325,12 @@ export default function Page() {
             />
 
             {isConnected && address ? (
-              <Button type="submit">Create Schedule</Button>
+              <Button type="submit" disabled={isCreating}>
+                {isCreating && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Create Schedule
+              </Button>
             ) : (
               <ConnectKitButton.Custom>
                 {({ show }) => {
@@ -289,16 +345,6 @@ export default function Page() {
           </form>
         </Form>
       </div>
-      {/* <div className="mt-8 space-y-1">
-        <div>beneficiary: {form.getValues().beneficiary}</div>
-        <div>amount: {formattedAmount.toString()}</div>
-        <div>
-          duration:{" "}
-          {endTimestamp && startTimestamp && endTimestamp - startTimestamp}
-        </div>
-        <div>cliff: {cliffSeconds}</div>
-        <div>revokable: {form.getValues().revokable.toString()}</div>
-      </div> */}
     </div>
   )
 }
