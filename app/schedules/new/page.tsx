@@ -30,6 +30,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Switch } from "@/components/ui/switch"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { env } from "@/env.mjs"
 import { cn, getChain } from "@/lib/utils"
 import { abi } from "@/lib/vestingAbi"
@@ -295,7 +301,26 @@ export default function Page() {
                     <Input {...field} type="number" />
                   </FormControl>
                   <FormDescription>
-                    Tokens are only released after the cliff period.
+                    Tokens are only released after the cliff period.{" "}
+                    <TooltipProvider>
+                      <Tooltip delayDuration={100}>
+                        <TooltipTrigger>
+                          {" "}
+                          <b>
+                            The cliff is included in the total vesting period.
+                          </b>
+                        </TooltipTrigger>
+                        <TooltipContent className="w-96	">
+                          Example: The schedule starts at 1/1/2024 and ends at
+                          1/1/2028. The cliff is supposed to be 12 months.{" "}
+                          <br /> <br />
+                          This means that the beneficiary can do their first
+                          token claim on 1/1/2025, when the cliff has ended.
+                          Then the schedule will run for another 3 years, until
+                          1/1/2028.
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
