@@ -88,7 +88,7 @@ export default function Page() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      beneficiary: "0xEfB29bfCF0fd08E20f73869678e9d17848407154",
+      beneficiary: "",
       amount: 0,
       cliffMonths: 0,
       revokable: false,
