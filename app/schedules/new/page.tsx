@@ -166,7 +166,7 @@ export default function Page() {
       <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
         Create Vesting Schedule
       </h1>
-      <div className="rounded-lg border border-slate-400 p-6">
+      <div className="rounded-lg border border-slate-300 p-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
