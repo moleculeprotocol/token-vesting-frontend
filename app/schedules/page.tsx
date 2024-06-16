@@ -16,9 +16,13 @@ import { columns } from "./columns"
 const chain: Chain = getChain(Number(env.NEXT_PUBLIC_CHAIN_ID))
 
 const client = createPublicClient({
+  batch: {
+    multicall: true,
+  },
   chain: chain,
   transport: http(
-    `${chain.rpcUrls.alchemy.http[0]}/${env.NEXT_PUBLIC_ALCHEMY_KEY}`
+    `${chain.rpcUrls.alchemy.http[0]}/${env.NEXT_PUBLIC_ALCHEMY_KEY}`,
+    { retryCount: 5 }
   ),
 })
 
@@ -44,16 +48,21 @@ export default async function Page() {
   const scheduleIds = await vestingContract.read.getVestingSchedulesIds()
   let numRevokedSchedules = 0
 
+  console.log("scheduleIds total:", scheduleIds.length)
+
   for (let i = 0; i < scheduleIds.length; i++) {
     const schedule: Schedule = await vestingContract.read.getVestingSchedule([
       scheduleIds[i] as `0x${string}`,
     ])
+    console.log("-----")
+    console.log("schedule request:", i + 1)
 
     let released: bigint = schedule.released as bigint
     totalReleasedTokens += released
 
     let releasableAmount = BigInt(0)
     if (schedule.status == 0) {
+      console.log("schedule amount request:", i + 1)
       releasableAmount = await vestingContract.read.computeReleasableAmount([
         scheduleIds[i],
       ])
@@ -67,11 +76,13 @@ export default async function Page() {
 
     // Only get ENS name for mainnet
     if (chain.id == 1) {
+      console.log("ens name request:", i + 1)
       ensName = await client.getEnsName({
         address: schedule.beneficiary as `0x${string}`,
       })
 
       if (ensName) {
+        console.log("ens avatar request:", i + 1)
         const ensText = await client.getEnsAvatar({
           name: normalize(ensName),
         })
