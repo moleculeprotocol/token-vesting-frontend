@@ -2,7 +2,7 @@ const { NormalModuleReplacementPlugin } = require("webpack")
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  staticPageGenerationTimeouts: 300,
+  staticPageGenerationTimeout: 600,
   experimental: {
     serverActions: true,
   },
